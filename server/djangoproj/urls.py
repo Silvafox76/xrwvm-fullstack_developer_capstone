@@ -22,6 +22,14 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('djangoapp/', include('djangoapp.urls')),
+
+    # React frontend routes
+    path('login/', TemplateView.as_view(template_name="index.html")),
+    path('register/', TemplateView.as_view(template_name="index.html")),
+    path('dealer/<int:dealer_id>/', TemplateView.as_view(template_name="index.html")),
+    path('dealer/<int:dealer_id>/add_review/', TemplateView.as_view(template_name="index.html")),
+
+    # Your custom pages (existing)
     path('', TemplateView.as_view(template_name="Home.html")),
     path('about/', TemplateView.as_view(template_name="About.html")),
     path('contact/', TemplateView.as_view(template_name="Contact.html")),
