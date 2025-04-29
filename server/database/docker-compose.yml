@@ -1,25 +1,30 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  # MongoDB service
   mongo_db:
+    image: mongo:latest          # ← this is 8.0.4 today
     container_name: db_container
-    image: mongo:latest
     ports:
-      - 27017:27017
-    restart: always
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    healthcheck:                 # wait until the DB answers ping
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 })'"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
 
-  # Node API service
   api:
-    build: .                         # ← FIXED
-    image: nodeapp
-    container_name: api_container   # ← Optional but nice to name it
+    build: .                     # uses your Dockerfile for Node
+    image: nodeapp:latest
+    container_name: api_container
     ports:
-      - 3030:3030
+      - "3030:3030"
     depends_on:
-      - mongo_db
+      mongo_db:
+        condition: service_healthy
+    environment:
+      - MONGO_URL=mongodb://mongo_db:27017/bestcar   # ← matches app.js
 
 volumes:
-  mongo_data: {}
+  mongo_data:
