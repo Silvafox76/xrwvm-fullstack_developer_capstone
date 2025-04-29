@@ -1,16 +1,17 @@
+# server/database/Dockerfile
 FROM node:18.12.1-bullseye-slim
 
-RUN npm install -g npm@9.1.3
+# 1️⃣  Set a real work directory
+WORKDIR /app
 
-ADD package.json .
-ADD app.js .
-ADD review.js .
-ADD dealership.js .
-ADD data/dealerships.json .
-ADD data/reviews.json .
+# 2️⃣  Copy only package files first (cache friendly)
+COPY package*.json ./
+
+# 3️⃣  Install production deps *inside the image*
+RUN npm ci --only=production
+
+# 4️⃣  Copy the rest of the source
 COPY . .
-RUN npm install
 
-EXPOSE 3030
-
-CMD [ "node", "app.js" ]
+# 5️⃣  Start the API
+CMD ["node", "app.js"]
