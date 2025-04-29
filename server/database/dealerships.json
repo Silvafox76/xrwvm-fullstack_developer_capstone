@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Holdalms Car Dealership",
+    "address": "3 Nova Court",
+    "city": "El Paso",
+    "zip": "88563",
+    "state": "Texas"
+  },
+  {
+    "id": 2,
+    "name": "Temp Car Dealership",
+    "address": "6337 Butternut Crossing",
+    "city": "Minneapolis",
+    "zip": "55402",
+    "state": "Minnesota"
+  },
+  {
+    "id": 3,
+    "name": "Sub-Ex Car Dealership",
+    "address": "9477 Twin Pines Center",
+    "city": "Birmingham",
+    "zip": "35285",
+    "state": "Alabama"
+  }
+]

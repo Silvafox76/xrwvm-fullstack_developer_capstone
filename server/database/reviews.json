@@ -1,0 +1,25 @@
+[
+    {
+      "id": 1,
+      "name": "John Doe",
+      "dealership": 1,
+      "review": "This is a great dealership.",
+      "purchase": true,
+      "purchase_date": "2024-03-15",
+      "car_make": "Toyota",
+      "car_model": "Camry",
+      "car_year": 2020
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "dealership": 2,
+      "review": "Service could be better.",
+      "purchase": false,
+      "purchase_date": "",
+      "car_make": "",
+      "car_model": "",
+      "car_year": 0
+    }
+  ]
+  

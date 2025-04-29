@@ -1,5 +1,3 @@
-# Uncomment the required imports before adding the code
-
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
@@ -12,12 +10,15 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from .populate import initiate
 from .models import CarMake, CarModel
-from .restapis import get_request, analyze_review_sentiments, post_review  # <-- import restapi functions
+from .restapis import get_request, analyze_review_sentiments, post_review
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-# Create your views here.
+
+# ----------------------------------------
+# AUTH VIEWS
+# ----------------------------------------
 
 @csrf_exempt
 def login_user(request):
@@ -62,28 +63,56 @@ def registration(request):
     else:
         return JsonResponse({"status": False})
 
-# Get dealerships (optionally by state)
+
+# ----------------------------------------
+# REACT API — Used by React Frontend
+# ----------------------------------------
+
+@csrf_exempt
+def get_dealers(request):
+    """
+    Returns the full list of dealers for React frontend
+    """
+    if request.method == "GET":
+        try:
+            endpoint = "/fetchDealers"
+            dealers = get_request(endpoint)
+
+            # Optional: Ensure JSON is a list
+            if isinstance(dealers, dict) and "dealers" in dealers:
+                dealers = dealers["dealers"]
+
+            return JsonResponse(dealers, safe=False)
+        except Exception as e:
+            print(f"Error in get_dealers: {e}")
+            return JsonResponse([], safe=False)
+
+
+# ----------------------------------------
+# DJANGO BACKEND API — Used Internally
+# ----------------------------------------
+
 def get_dealerships(request, state="All"):
     if state == "All":
         endpoint = "/fetchDealers"
     else:
-        endpoint = "/fetchDealers/" + state
+        endpoint = f"/fetchDealers/{state}"
     dealerships = get_request(endpoint)
     return JsonResponse({"status": 200, "dealers": dealerships})
 
-# Get dealer details by ID
+
 def get_dealer_details(request, dealer_id):
     if dealer_id:
-        endpoint = "/fetchDealer/" + str(dealer_id)
+        endpoint = f"/fetchDealer/{dealer_id}"
         dealership = get_request(endpoint)
         return JsonResponse({"status": 200, "dealer": dealership})
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
 
-# Get dealer reviews by ID (analyze sentiment)
+
 def get_dealer_reviews(request, dealer_id):
     if dealer_id:
-        endpoint = "/fetchReviews/dealer/" + str(dealer_id)
+        endpoint = f"/fetchReviews/dealer/{dealer_id}"
         reviews = get_request(endpoint)
         for review_detail in reviews:
             sentiment = analyze_review_sentiments(review_detail['review'])
@@ -92,7 +121,7 @@ def get_dealer_reviews(request, dealer_id):
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
 
-# Add review (handles POST submission with sentiment analysis)
+
 @csrf_exempt
 def add_review(request):
     if request.method == "POST":
@@ -106,10 +135,8 @@ def add_review(request):
         car_model = review_data.get("carModel", "")
         car_year = review_data.get("carYear", "")
 
-        # Analyze review sentiment
         sentiment = analyze_review_sentiments(review_text)
 
-        # Prepare payload
         payload = {
             "review": review_text,
             "dealership": dealer_id,
@@ -121,15 +148,13 @@ def add_review(request):
             "sentiment": sentiment
         }
 
-        # Post the review
         post_review(payload)
 
         return JsonResponse({"status": "Review posted successfully"})
-    
     else:
         return JsonResponse({"status": "POST request required"})
 
-# Get all cars for car selection
+
 def get_cars(request):
     count = CarMake.objects.count()
     if count == 0:

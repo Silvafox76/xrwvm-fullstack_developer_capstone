@@ -29,10 +29,10 @@ urlpatterns = [
     # path to get all cars
     path('get_cars', views.get_cars, name='getcars'),
 
-    # path to get all dealerships
-    path('get_dealers', views.get_dealerships, name='get_dealers'),
+    # ✅ updated path to match what frontend calls exactly
+    path(route='get_dealers/', view=views.get_dealerships, name='get_dealers'),
 
-    # path to get dealerships filtered by state
+    # existing path to allow optional filtering by state
     path('get_dealers/<str:state>', views.get_dealerships, name='get_dealers_by_state'),
 
     # path to get dealer reviews with sentiment analysis

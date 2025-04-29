@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  # Mongodb service
+  # MongoDB service
   mongo_db:
     container_name: db_container
     image: mongo:latest
@@ -11,12 +11,14 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  # Node api service
+  # Node API service
   api:
+    build: .                         # ← FIXED
     image: nodeapp
+    container_name: api_container   # ← Optional but nice to name it
     ports:
       - 3030:3030
-    depends_on: 
+    depends_on:
       - mongo_db
 
 volumes:
