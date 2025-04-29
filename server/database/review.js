@@ -1,14 +1,16 @@
+/*jshint esversion: 6 */
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
-const reviewSchema = new Schema({
-  id: {
+const reviews = new Schema({
+	id: {
     type: Number,
     required: true,
-  },
-  name: {
+	},
+	name: {
     type: String,
-    required: true,
+    required: true
   },
   dealership: {
     type: Number,
@@ -16,28 +18,28 @@ const reviewSchema = new Schema({
   },
   review: {
     type: String,
-    required: true,
+    required: true
   },
   purchase: {
     type: Boolean,
-    default: false, // Optional
+    required: true
   },
   purchase_date: {
     type: String,
-    default: "", // Optional
+    required: true
   },
   car_make: {
     type: String,
-    default: "", // Optional
+    required: true
   },
   car_model: {
     type: String,
-    default: "", // Optional
+    required: true
   },
   car_year: {
     type: Number,
-    default: 0, // Optional
+    required: true
   },
 });
 
-module.exports = mongoose.model('reviews', reviewSchema);
+module.exports = mongoose.model('reviews', reviews);

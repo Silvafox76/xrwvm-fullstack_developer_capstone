@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 8 */
 const { Int32 } = require('mongodb');
 const mongoose = require('mongoose');
 
@@ -26,6 +26,10 @@ year: {
     required: true
   },
 mileage: {
+    type: Number,
+    required: true
+  },
+price: {
     type: Number,
     required: true
   }
